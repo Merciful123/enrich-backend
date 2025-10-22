@@ -20,9 +20,10 @@ app.use(helmet());
 // Enhanced CORS configuration
 app.use(cors({
   origin: [
-    'http://localhost:5173',  // Vite
-    'http://localhost:5174',  // Vite alternate
-    'http://127.0.0.1:5173', // Vite with IP
+    'http://localhost:5173',  
+    'http://localhost:5174',  
+    'http://127.0.0.1:5173', 
+    'https://enrich-client.netlify.app/'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
