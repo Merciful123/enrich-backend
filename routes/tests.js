@@ -34,7 +34,30 @@ const TEST_INBOXES = [
   },
 ];
 
-// Create a new email deliverability test
+
+// 
+// Add CORS middleware for specific routes if needed
+router.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://enrich-client.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  next();
+});
+// 
+
+
 // Create a new email deliverability test
 router.post('/create', [
   body('userEmail').isEmail().normalizeEmail(),

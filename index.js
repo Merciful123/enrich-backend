@@ -11,35 +11,75 @@ import emailRoutes from './routes/email.js';
 
 dotenv.config();
 
-const MONGODB_URL = process.env.MONGODB_URL
-
 const app = express();
 
-// Security Middleware
-app.use(helmet());
-// Enhanced CORS configuration
+// Enhanced CORS configuration - PUT THIS AT THE VERY TOP
 app.use(cors({
   origin: [
-    'http://localhost:5173',  
-    'http://localhost:5174',  
-    'http://127.0.0.1:5173', 
-    'https://enrich-client.netlify.app/'
+    'https://enrich-client.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
   ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With', 
+    'Accept', 
+    'Origin', 
+    'Access-Control-Allow-Headers',
+    'Access-Control-Request-Headers',
+    'Access-Control-Allow-Origin'
+  ],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
+
+// Explicitly handle OPTIONS preflight requests
+app.options('*', cors());
+
+// Security Middleware
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false
 }));
 
 // Rate Limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100
 });
-// app.use(limiter);
+app.use(limiter);
 
 // Body Parsing Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Add custom CORS headers middleware
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://enrich-client.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 
 // MongoDB Connection
 const connectDB = async () => {
@@ -70,9 +110,30 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Test CORS route
+app.get('/api/cors-test', (req, res) => {
+  res.json({ 
+    message: 'CORS is working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
+  
+  // Add CORS headers to error responses
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'https://enrich-client.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ];
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
   res.status(500).json({ 
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : {}
@@ -81,11 +142,24 @@ app.use((err, req, res, next) => {
 
 // 404 Handler
 app.use('*', (req, res) => {
+  // Add CORS headers to 404 responses
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'https://enrich-client.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ];
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
   res.status(404).json({ message: 'Route not found' });
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`CORS enabled for: https://enrich-client.netlify.app`);
 });
