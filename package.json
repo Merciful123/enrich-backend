@@ -24,9 +24,8 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
     "express-rate-limit": "^6.8.1",
-    "uuid": "^9.0.0",
-    "nodemon": "^3.0.1"
-
+    "uuid": "^9.0.0"
+    
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

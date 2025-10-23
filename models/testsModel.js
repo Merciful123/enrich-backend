@@ -67,7 +67,7 @@ const testSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  inboxCount: {  // ✅ ADDED: Track inbox deliveries separately
+  inboxCount: {  // Track inbox deliveries separately
     type: Number,
     default: 0
   },
@@ -89,7 +89,7 @@ const testSchema = new mongoose.Schema({
   }]
 });
 
-// ✅ FIXED: Correct pre-save middleware for score calculation
+//Correct pre-save middleware for score calculation
 testSchema.pre('save', function(next) {
   if (this.results && this.results.length > 0) {
     // Count different types of results
@@ -102,7 +102,7 @@ testSchema.pre('save', function(next) {
     this.spamCount = spamResults.length;
     this.inboxCount = inboxResults.length;
     
-    // ✅ FIXED: Calculate overall score based on inbox placements
+    //  Calculate overall score based on inbox placements
     // Score = (number of inbox placements / total providers) * 100
     if (this.results.length > 0) {
       this.overallScore = Math.round((this.inboxCount / this.results.length) * 100);
@@ -110,7 +110,7 @@ testSchema.pre('save', function(next) {
       this.overallScore = 0;
     }
     
-    console.log(`📊 Score Calculation: ${this.inboxCount} inbox / ${this.results.length} total = ${this.overallScore}%`);
+    console.log(`Score Calculation: ${this.inboxCount} inbox / ${this.results.length} total = ${this.overallScore}%`);
   } else {
     // Reset counts if no results
     this.deliveredCount = 0;
