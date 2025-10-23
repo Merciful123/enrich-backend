@@ -38,7 +38,7 @@ router.post('/start-check', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Error starting email check:', error);
+    console.error('Error starting email check:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to start email checking'

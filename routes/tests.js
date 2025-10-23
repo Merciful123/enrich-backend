@@ -18,20 +18,30 @@ const generateTestCode = () => {
 // Test inbox configuration
 const TEST_INBOXES = [
   {
-    provider: 'gmail',
-    email: process.env.GMAIL_USER || 'test.gmail@yourdomain.com',
+    provider: 'gmail1',
+    email: process.env.GMAIL_USER1 || 'test.gmail@yourdomain.com',
+    displayName: 'Gmail'
+  },
+   {
+    provider: 'gmail2',
+    email: process.env.GMAIL_USER2 || 'test.gmail@yourdomain.com',
+    displayName: 'Gmail'
+  },
+   {
+    provider: 'gmail3',
+    email: process.env.GMAIL_USER3 || 'test.gmail@yourdomain.com',
+    displayName: 'Gmail'
+  },
+   {
+    provider: 'gmail4',
+    email: process.env.GMAIL_USER4 || 'test.gmail@yourdomain.com',
     displayName: 'Gmail'
   },
   {
     provider: 'outlook',
     email: process.env.OUTLOOK_USER || 'test.outlook@yourdomain.com',
     displayName: 'Outlook'
-  },
-  {
-    provider: 'yahoo',
-    email: process.env.YAHOO_USER || 'test.yahoo@yourdomain.com',
-    displayName: 'Yahoo'
-  },
+  }
 ];
 
 

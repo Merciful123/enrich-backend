@@ -7,7 +7,7 @@ const testResultSchema = new mongoose.Schema({
   emailProvider: {
     type: String,
     required: true,
-    enum: ['gmail', 'outlook', 'yahoo']
+    enum: ['gmail', 'outlook']
   },
   emailAddress: {
     type: String,

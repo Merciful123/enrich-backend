@@ -28,32 +28,30 @@ class EmailChecker {
           authTimeout: 30000,
         },
         folders: ["INBOX", "Junk Email"], // folder name
-      },
-      yahoo: {
-        imap: {
-          host: "imap.mail.yahoo.com",
-          port: 993,
-          tls: true,
-          tlsOptions: { rejectUnauthorized: false },
-          authTimeout: 30000,
-        },
-        folders: ["INBOX", "Bulk Mail"],
-      },
+      }
     };
 
     // Remove quotes from passwords and validate
     this.emailConfigs = {
       gmail: {
-        user: process.env.GMAIL_USER?.replace(/"/g, ""),
-        pass: process.env.GMAIL_PASS?.replace(/"/g, ""),
+        user: process.env.GMAIL_USER1?.replace(/"/g, ""),
+        pass: process.env.GMAIL_PASS1?.replace(/"/g, ""),
+      },
+       gmail: {
+        user: process.env.GMAIL_USER2?.replace(/"/g, ""),
+        pass: process.env.GMAIL_PASS2?.replace(/"/g, ""),
+      },
+       gmail: {
+        user: process.env.GMAIL_USER3?.replace(/"/g, ""),
+        pass: process.env.GMAIL_PASS3?.replace(/"/g, ""),
+      },
+       gmail: {
+        user: process.env.GMAIL_USER4?.replace(/"/g, ""),
+        pass: process.env.GMAIL_PASS4?.replace(/"/g, ""),
       },
       outlook: {
         user: process.env.OUTLOOK_USER?.replace(/"/g, ""),
         pass: process.env.OUTLOOK_PASS?.replace(/"/g, ""),
-      },
-      yahoo: {
-        user: process.env.YAHOO_USER?.replace(/"/g, ""),
-        pass: process.env.YAHOO_PASS?.replace(/"/g, ""),
       },
     };
 
@@ -455,11 +453,7 @@ class EmailChecker {
         "Junk Email": "spam", //Outlook folder name
         Junk: "spam",
         Clutter: "promotions",
-      },
-      yahoo: {
-        INBOX: "inbox",
-        "Bulk Mail": "spam",
-      },
+      }
     };
 
     const providerMap = folderMaps[provider] || {};
